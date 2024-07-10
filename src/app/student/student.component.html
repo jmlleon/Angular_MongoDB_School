@@ -1,22 +1,27 @@
 
-<div class="flex flex-row w-full">
 
-    <div class="w-[50%] border border-solid border-slate-300 rounded-md m-4 p-2 space-x-4">
-        <button mat-raised-button  color="primary">Activate Cam</button>    
-        <button mat-raised-button color="warning">Stop Cam</button> 
-        <button mat-raised-button  color="primary">Take Photo</button> 
-    </div>
+<div class="border border-slate-300 rounded-md p-10">
+
+<table mat-table [dataSource]="studentList" *ngIf="!loading" class="w-full">
     
-    <div class="w-[30%] border border-solid border-slate-300 rounded-md my-4 text-center py-3">
-        <span class="uppercase font-medium text-blue-800 text-lg">Photo Gallery</span>
-    </div>
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>Id</th>
+        <td mat-cell *matCellDef="let student">{{student.id}}</td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let student">{{student.name}}</td>
+    </ng-container>
+    <ng-container matColumnDef="age">
+        <th mat-header-cell *matHeaderCellDef>Age</th>
+        <td mat-cell *matCellDef="let student">{{student.age}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns:columns;"></tr>
+
+
+</table>
 
 </div>
 
-
-<div class="flex flex-row w-full">
-   
-    
-
-    
-</div>

@@ -7,7 +7,7 @@ import { StudentComponent } from './student/student.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, RouterLink, StudentComponent ],
+  imports: [RouterOutlet, CommonModule, RouterLink, StudentComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

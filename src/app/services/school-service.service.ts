@@ -5,9 +5,9 @@ import { Student } from '../share/model/Student.model';
 @Injectable({
   providedIn: 'root'
 })
-export class SchoolServiceService {
+export class StudentService {
 
-  apiUrl:string="http://localhost:/api/school";
+  apiUrl:string="https://localhost:44306/api/school"; 
 
   constructor(private httpClient:HttpClient) { }
 
@@ -16,6 +16,12 @@ export class SchoolServiceService {
 
     return this.httpClient.get<Student[]>(this.apiUrl);
 
+
+  }
+
+  GetById(id:number){
+
+    return this.httpClient.get<Student>(this.apiUrl+`/${id}`)
 
   }
 
