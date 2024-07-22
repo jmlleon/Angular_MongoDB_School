@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button'; 
-import {MatTableModule} from '@angular/material/table'
+import {MatTableModule} from '@angular/material/table';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { Student } from '../share/model/Student.model';
 import { StudentService } from '../services/school-service.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -9,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'student',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatTableModule],
+  imports: [CommonModule, MatButtonModule, MatTableModule, MatProgressSpinnerModule],
   templateUrl: './student.component.html',
   styleUrl: './student.component.css'
 })
@@ -19,8 +20,6 @@ export class StudentComponent implements OnInit{
 
   studentList:Student[]=[];
   loading=true;
-
-
   
   constructor(private schoolSvc:StudentService){}
 

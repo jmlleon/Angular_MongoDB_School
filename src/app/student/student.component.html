@@ -1,8 +1,12 @@
 
 
-<div class="border border-slate-300 rounded-md p-10">
+<div class="flex justify-center w-full" *ngIf="loading"><!-- border-2 border-solid-->
+<mat-spinner></mat-spinner>    
+</div>
 
-<table mat-table [dataSource]="studentList" *ngIf="!loading" class="w-full">
+<div class="border border-slate-300 rounded-md p-10 w-full md:w-[80%] xl:w-[60%] mx-auto">
+
+<table mat-table [dataSource]="studentList" *ngIf="!loading" ><!--class="border-2 border-solid border-blue-600"-->
     
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>Id</th>

@@ -1,0 +1,40 @@
+<div class="flex flex-col w-[60%] mx-auto">
+
+  <div class="w-full bg-blue-800 rounded-t-md mb-4 text-center py-2">
+
+    <span class="text-white uppercase">Student Personal Information</span>
+
+  </div>
+
+  <div class="border border-slate-300 border-solid rounded-b-md p-4">
+
+    <form [formGroup]="formGroup" (ngSubmit)="AddStudent()">
+    
+       
+        <mat-form-field class="formField"  appearance="outline"><!-- -->
+            <mat-label>Name</mat-label>            
+            <input matInput type="text" formControlName="name">
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            @if(this.formGroup.controls["name"].hasError('required')){<mat-error>The Name is required</mat-error>} 
+        </mat-form-field>    
+
+        <mat-form-field appearance="outline" class="formField">
+            <mat-label>Age</mat-label>
+            <input matInput type="text" formControlName="age">
+            @if(this.formGroup.controls["age"].hasError('required')){<mat-error>The Age is required</mat-error>}   
+        </mat-form-field> 
+
+    
+</form>
+
+<div class="mt-4 border border-slate-300 w-full text-center">
+
+    <button mat-raised-button color="primary">Create</button>
+
+</div>
+
+
+  </div>
+    
+
+</div>

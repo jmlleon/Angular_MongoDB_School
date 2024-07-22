@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Student } from '../share/model/Student.model';
+import { Student, StudentAdd } from '../share/model/Student.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,13 @@ export class StudentService {
 
   constructor(private httpClient:HttpClient) { }
 
+  /*let params=new HttpParams();
+    params=params.append("pageNumber", paginationFilter.pageNumber);
+    params=params.append("pageSize", paginationFilter.pageSize);
+    params=params.append("sortOrder", paginationFilter.sortOrder);
+
+    return this.httpClient.get<CostCenterSales[]>(`${environment.apiUrl}${this.appUrl}/sales`, {headers:this.httpHeaders, params:params});
+   */
 
   GetStudentList(){
 
@@ -23,6 +30,11 @@ export class StudentService {
 
     return this.httpClient.get<Student>(this.apiUrl+`/${id}`)
 
+  }
+
+  AddStudent(studentAdd:StudentAdd){
+
+    return this.httpClient.post<Student>(this.apiUrl,studentAdd);
   }
 
 

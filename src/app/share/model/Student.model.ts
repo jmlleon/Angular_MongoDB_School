@@ -14,3 +14,5 @@ export class Student{
 
 
 }
+
+export type StudentAdd=Omit<Student, "id">;
