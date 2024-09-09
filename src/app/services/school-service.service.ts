@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Student, StudentAdd } from '../share/model/Student.model';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
 
-  apiUrl:string="https://localhost:44306/api/school"; 
+  apiUrl=environment.APIUrl; 
 
   constructor(private httpClient:HttpClient) { }
 
@@ -22,8 +23,7 @@ export class StudentService {
   GetStudentList(){
 
     return this.httpClient.get<Student[]>(this.apiUrl);
-
-
+    
   }
 
   GetById(id:number){
@@ -34,7 +34,20 @@ export class StudentService {
 
   AddStudent(studentAdd:StudentAdd){
 
-    return this.httpClient.post<Student>(this.apiUrl,studentAdd);
+    return this.httpClient.post<Student>(this.apiUrl, studentAdd);
+    
+  }
+
+  SetStudent(studentId:string,student:Student){
+
+    return this.httpClient.put<any>(this.apiUrl,student);
+
+  }
+
+  Remove(studentId:string){
+
+    return this.httpClient.delete(`${this.apiUrl}/${studentId}`);
+
   }
 
 
