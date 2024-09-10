@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { DialogService } from '../services/dialog-service.service';
+import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'student',
@@ -25,7 +27,9 @@ import { DialogService } from '../services/dialog-service.service';
   templateUrl: './student.component.html',
   styleUrl: './student.component.css',
 })
-export class StudentComponent implements OnInit {
+export class StudentComponent implements OnInit, OnDestroy {
+
+  private ngDestroy$=new Subject<boolean>();
 
   displayColumns=['actions','id', 'name', 'age'];  
   columns = ['remove','edit','id', 'name', 'age'];
@@ -37,17 +41,25 @@ export class StudentComponent implements OnInit {
   loading = true;
 
   constructor(
-  private schoolSvc: StudentService,
-  private dialogSvc:DialogService
+  private studentSvc: StudentService,
+  private dialogSvc:DialogService,
+  private router:Router
 
   ) {}
+  
+  
+  ngOnDestroy(): void {
+
+    this.ngDestroy$.next(true);
+    
+  }
 
   ngOnInit(): void {
     this.GetStudentList();
   }
 
   GetStudentList() {
-    this.schoolSvc.GetStudentList().subscribe({
+    this.studentSvc.GetStudentList().pipe(takeUntil(this.ngDestroy$)).subscribe({
       next: (response) => {
         this.studentList = response;
       },
@@ -74,8 +86,7 @@ export class StudentComponent implements OnInit {
 
       if(response==="ok"){
 
-        this.schoolSvc.Remove(student.id).subscribe({
-          next: (response) => {},
+        this.studentSvc.Remove(student.id).subscribe({        
           error: (error) => {
             console.error(error);
           },
@@ -95,13 +106,10 @@ export class StudentComponent implements OnInit {
   }
 
   Edit(student:Student){
+   
+  this.studentSvc.SetStudent(student);
 
-   this.schoolSvc.SetStudent(student.id, student).subscribe({
-
-    error:(err)=>{console.error(err);},
-    complete() {   },
-
-   })
+  this.router.navigate(['student-add'],{queryParams:{opt:"edit"}});
 
   }
 }

@@ -3,7 +3,7 @@
 
 <div class="flex py-4 mt-6  w-[60%] mx-auto"><!--border-2 border-solid-->
     <button routerLink="/" mat-raised-button color="primary" class="mr-4">Show All Student</button>
-    <button routerLink="student-add" mat-raised-button color="primary">Create Student</button>
+    <button routerLink="student-add" [queryParams]="{opt:'add'}" mat-raised-button color="primary">Create Student</button>
 </div>
 
 <!--Center Content-->

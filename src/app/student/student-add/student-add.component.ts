@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
-import { StudentAdd } from '../../share/model/Student.model';
+import { Student, StudentAdd } from '../../share/model/Student.model';
 import { StudentService } from '../../services/school-service.service';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -11,16 +11,22 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import {faCircleInfo, faUser,faUserCircle,} from '@fortawesome/free-solid-svg-icons';
 import { SnackBarService } from '../../services/snack-bar-service.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'student-add',
   standalone: true,
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatIconModule,FontAwesomeModule, MatButtonModule],
+  imports: [CommonModule,MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatIconModule,FontAwesomeModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './student-add.component.html',
   styleUrl: './student-add.component.css'
 })
-export class StudentAddComponent {
+export class StudentAddComponent implements OnInit, OnDestroy {
+
+
+private ngDestroy$ = new Subject<boolean>();
 
 formGroup:FormGroup;
 loading=false;
@@ -30,21 +36,62 @@ faAge=faCircleInfo;
 
 numberRegEx = /\-?\d*\.?\d{1,2}/;
 
+optType:string|null="";
+
+selectedStudent={} as Student;
+
+
 constructor(fb:FormBuilder, 
   private studentSvc:StudentService,
-  private router:Router
+  private router:Router,
+  private activeRoute:ActivatedRoute
 
 ){
 
   this.formGroup=fb.group({
     name:["",[Validators.required]],
     age:["",[Validators.required, Validators.pattern(this.numberRegEx), Validators.min(1),Validators.max(150)]]
-})
+});
+
+}
+  
+
+ngOnInit(): void {    
+
+    this.activeRoute.queryParamMap.pipe(takeUntil(this.ngDestroy$)).subscribe((param) => {
+    
+      this.optType = param.get('opt');    
+     
+     if(this.optType==="edit"){       
+
+      this.studentSvc.student$.pipe(takeUntil(this.ngDestroy$)).subscribe(response=>{
+
+        this.selectedStudent=response;
+
+        //console.log(JSON.stringify(this.selectedStudent));
+
+        this.formGroup.get("name")?.setValue(this.selectedStudent.name);
+        this.formGroup.get("age")?.setValue(this.selectedStudent.age);
+       
+      })
+      
+     }else{
+
+      this.formGroup.get("name")?.setValue("");
+      this.formGroup.get("age")?.setValue("");
+     }
+      
+    }); 
 
 }
 
 
-AddStudent(){
+ngOnDestroy(): void {
+  this.ngDestroy$.next(true);
+  //console.log("destroy");
+}
+
+Add(){
 
   this.loading=true;
 
@@ -53,22 +100,42 @@ AddStudent(){
     age:this.formGroup.get("age")?.value
   }
 
-  this.studentSvc.AddStudent(student).subscribe({
- // next:(response)=>{},
-  error:(error)=>{
-    //this.snackBarSvc.OpenSnackBar({title:`${error.console.error}`, type:"ERROR"});
-    //console.log(error);
+  this.studentSvc.Add(student).pipe(takeUntil(this.ngDestroy$)).subscribe({ 
+  error:(error)=>{    
   },
   complete:()=>{
     this.loading=false;
-    this.router.navigate(['/']);
-    // this.router.navigate(['admin/cost-center-edit'], {queryParams:{id:costCenter.idCcosto}, skipLocationChange:true});
+    this.router.navigate(['/']);    
   }
-
-
   })
 
 }
+
+Edit(){
+
+  this.loading=true;
+
+  var student:Student={
+
+    id:this.selectedStudent!.id,
+    name:this.formGroup.get("name")?.value,
+    age:this.formGroup.get("age")?.value
+
+  };
+
+  this.studentSvc.Set(student.id, student).pipe(takeUntil(this.ngDestroy$)).subscribe({
+    error:(err)=>{
+      console.error(err);
+      this.loading=false;
+    },
+    complete:()=>{  
+      this.loading=false;
+      this.router.navigate(['/']);
+     },
+   })
+
+}
+
 get name(){return this.formGroup.get('name');}
 
 get age(){return this.formGroup.get('age');}

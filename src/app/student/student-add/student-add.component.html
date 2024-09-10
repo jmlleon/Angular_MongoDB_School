@@ -8,7 +8,7 @@
 
   <div class="border border-slate-300 border-solid rounded-b-md p-4">
 
-    <form [formGroup]="formGroup" (ngSubmit)="AddStudent()">    
+    <form [formGroup]="formGroup" >    <!--(ngSubmit)="AddStudent()"-->
        
         <mat-form-field class="formField" appearance="outline">
             <mat-label>Name</mat-label>            
@@ -28,16 +28,16 @@
 
         <div class="mt-4 w-full text-center"><!--border border-slate-300-->
 
-          <button mat-raised-button color="primary" class="w-[30%]" [disabled]="!formGroup.valid">Create</button>
+          <button mat-raised-button (click)="Add()" color="primary" class="w-[30%]" [disabled]="!formGroup.valid" *ngIf="optType==='add'">Create</button>
+          <button mat-raised-button (click)="Edit()" color="primary" class="w-[30%]" [disabled]="!formGroup.valid" *ngIf="optType==='edit'">Edit</button>
       
       </div>
     
 </form>
 
+</div>
 
-
-
-  </div>
+<div class="flex items-center justify-center mt-4 h-12"><mat-spinner mode="indeterminate" diameter="40" *ngIf="loading"></mat-spinner></div><!--border border-slate-300-->
     
 
 </div>
