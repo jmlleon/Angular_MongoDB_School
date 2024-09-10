@@ -1,8 +1,19 @@
 
-<div class="flex items-center justify-center border border-slate-300 border-solid rounded-md w-[80%] min-h-[90vh] mx-auto m-4">
+<div class="flex flex-col bg-gradient-to-b from-slate-300 to-white rounded-md w-[80%] min-h-[90vh] mx-auto m-4"> <!--border border-slate-300 border-solid -->
 
-    <!-- <router-outlet class="border-2 border-solid border-pink-500 w-full" /> -->
-     <student></student>
+<div class="flex py-4 mt-6  w-[60%] mx-auto"><!--border-2 border-solid-->
+    <button routerLink="/" mat-raised-button color="primary" class="mr-4">Show All Student</button>
+    <button routerLink="student-add" [queryParams]="{opt:'add'}" mat-raised-button color="primary">Create Student</button>
+</div>
+
+<!--Center Content-->
+<div class="mt-12 p-2"><!--border-2 border-solid-->
+       
+<!-- <router-outlet class="border-2 border-solid border-pink-500 w-full" class="w-[60%]" /> -->
+     <!-- <student></student> items-center justify-center -->
+     <router-outlet></router-outlet>
+
+</div>
 
 </div>
 

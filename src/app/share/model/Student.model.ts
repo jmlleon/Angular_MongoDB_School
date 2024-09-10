@@ -2,9 +2,9 @@
 
 export class Student{
 
-    public id:string;           
-    public name:string;          
-    public age:number;
+    public id:string="";           
+    public name:string="";          
+    public age:number=-1;
 
     constructor(id:string, name:string, age:number){
         this.id=id;
@@ -14,3 +14,5 @@ export class Student{
 
 
 }
+
+export type StudentAdd=Omit<Student, "id">;
