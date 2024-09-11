@@ -6,20 +6,13 @@ import { SnackBarService } from "../../services/snack-bar-service.service";
 @Injectable()
 export class HttpCodeInterceptor implements HttpInterceptor {
   
-
-  /*
-{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true, deps: [LocalStorageService, SessionStorageService] },
-
-*/
-
   
   constructor(public snackBarSvc: SnackBarService) { }
   
   
   intercept(req: HttpRequest<any>, next: HttpHandler){
 
-    //console.error('ENTROOOOOO');
-
+   
     return next.handle(req).pipe(
       
       catchError((err: any) => {

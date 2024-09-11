@@ -59,7 +59,7 @@ export class StudentComponent implements OnInit, OnDestroy {
   }
 
   GetStudentList() {
-    this.studentSvc.GetStudentList().pipe(takeUntil(this.ngDestroy$)).subscribe({
+    this.studentSvc.GetList().pipe(takeUntil(this.ngDestroy$)).subscribe({
       next: (response) => {
         this.studentList = response;
       },

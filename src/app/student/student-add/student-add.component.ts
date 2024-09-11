@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -15,6 +15,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subject, takeUntil } from 'rxjs';
+import { LocalStorageService } from '../../services/local-storage-service.service';
 
 @Component({
   selector: 'student-add',
@@ -41,10 +42,12 @@ optType:string|null="";
 selectedStudent={} as Student;
 
 
-constructor(fb:FormBuilder, 
+constructor(
+  fb:FormBuilder, 
   private studentSvc:StudentService,
   private router:Router,
-  private activeRoute:ActivatedRoute
+  private activeRoute:ActivatedRoute,
+  private localstorageSvc:LocalStorageService
 
 ){
 
@@ -62,28 +65,45 @@ ngOnInit(): void {
     
       this.optType = param.get('opt');    
      
-     if(this.optType==="edit"){       
-
-      this.studentSvc.student$.pipe(takeUntil(this.ngDestroy$)).subscribe(response=>{
-
-        this.selectedStudent=response;
-
-        //console.log(JSON.stringify(this.selectedStudent));
-
-        this.formGroup.get("name")?.setValue(this.selectedStudent.name);
-        this.formGroup.get("age")?.setValue(this.selectedStudent.age);
-       
-      })
+     if(this.optType==="edit"){ 
+      
+      this.GetStudentSelected();
       
      }else{
 
       this.formGroup.get("name")?.setValue("");
       this.formGroup.get("age")?.setValue("");
+
      }
       
     }); 
 
 }
+
+
+
+GetStudentSelected(){
+    
+  let studentFromStorage:Student=JSON.parse(this.localstorageSvc.getItem("studentSelected")!); 
+
+  if(studentFromStorage!==undefined && studentFromStorage!==null){ 
+    
+    this.selectedStudent=studentFromStorage;
+    this.localstorageSvc.removeItem("studentSelected");
+
+  }else{
+
+    this.studentSvc.student$.pipe(takeUntil(this.ngDestroy$)).subscribe(response=>{
+
+      this.selectedStudent=response;     
+    });
+  }
+
+  this.formGroup.get("name")?.setValue(this.selectedStudent.name);
+  this.formGroup.get("age")?.setValue(this.selectedStudent.age);
+  
+}
+
 
 
 ngOnDestroy(): void {
@@ -139,5 +159,13 @@ Edit(){
 get name(){return this.formGroup.get('name');}
 
 get age(){return this.formGroup.get('age');}
+
+
+@HostListener('window:beforeunload', ['$event'])
+beforeUnloadHandler($event: Event): void {  
+  
+  this.localstorageSvc.setItem("studentSelected", JSON.stringify(this.selectedStudent)); 
+
+}  
 
 }
