@@ -11,7 +11,7 @@ export class StudentService {
 
   apiUrl=environment.APIUrl; 
 
-  private student:Student={id:"", name:"", age:-1};
+  private student:Student={} as Student;
   student$=new Observable<Student>;
   private studentSubject=new BehaviorSubject<Student>(this.student);
 
@@ -20,15 +20,7 @@ export class StudentService {
 
     this.student$=this.studentSubject.asObservable();
 
-   }
-
-  /*let params=new HttpParams();
-    params=params.append("pageNumber", paginationFilter.pageNumber);
-    params=params.append("pageSize", paginationFilter.pageSize);
-    params=params.append("sortOrder", paginationFilter.sortOrder);
-
-    return this.httpClient.get<CostCenterSales[]>(`${environment.apiUrl}${this.appUrl}/sales`, {headers:this.httpHeaders, params:params});
-   */
+   }  
 
     SetStudent(student:Student){
 
@@ -37,7 +29,7 @@ export class StudentService {
 
     }
 
-  GetStudentList(){
+  GetList(){
 
     return this.httpClient.get<Student[]>(this.apiUrl);
     
@@ -45,7 +37,7 @@ export class StudentService {
 
   GetById(id:number){
 
-    return this.httpClient.get<Student>(this.apiUrl+`/${id}`)
+    return this.httpClient.get<Student>(`${this.apiUrl}/${id}`)
 
   }
 
@@ -55,9 +47,9 @@ export class StudentService {
     
   }
 
-  Set(studentId:string,student:Student){
+  Set(id:string,student:Student){   
 
-    return this.httpClient.put<any>(this.apiUrl,student);
+    return this.httpClient.put(`${this.apiUrl}/${id}`,student);
 
   }
 
