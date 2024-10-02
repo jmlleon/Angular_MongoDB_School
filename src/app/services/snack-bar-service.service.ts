@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackBarComponent, SnackBarData } from '../share/snack-bar/snack-bar.component';
+import { SnackBarComponent } from '../share/snack-bar/snack-bar.component';
+import { SnackBarData } from '../share/model/Student.model';
 
 
 
@@ -17,10 +18,9 @@ export class SnackBarService {
 
   OpenSnackBarTest(content:string, action:string) {
 
-    let snb = this.snackBar.open(content, action, { duration: 5000, panelClass:['snackBar-green'] });//validateVerticalPosition, horizontalPosition
+    let snb = this.snackBar.open(content, action, { duration: 5000, panelClass:['snackBar-green'] });
 
     snb.onAction().subscribe(() => {
-
       snb.dismiss();
     });
 
@@ -28,11 +28,11 @@ export class SnackBarService {
 
   OpenSnackBar(data: SnackBarData) {
 
-    let snb = this.snackBar.openFromComponent(SnackBarComponent, {duration: 3000, data: data, panelClass:['snackBar'] })//duration: 5000 
+    let snb = this.snackBar.openFromComponent(SnackBarComponent, {duration: 3000, data: data, panelClass:['snackBar'] })
 
-    snb.afterDismissed().subscribe(() => {     
+    /*snb.afterDismissed().subscribe(() => {     
       //snb.dismiss();
-    })
+    })*/
 
 
   }

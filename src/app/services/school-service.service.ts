@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Student, StudentAdd } from '../share/model/Student.model';
+import { PaginationFilter, Student, StudentAdd } from '../share/model/Student.model';
 import { environment } from '../../environments/environment.development';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class StudentService {
 
   private student:Student={} as Student;
   student$=new Observable<Student>;
-  private studentSubject=new BehaviorSubject<Student>(this.student);
+  private studentSubject=new BehaviorSubject<Student>(this.student); 
 
 
   constructor(private httpClient:HttpClient) {
@@ -29,10 +29,16 @@ export class StudentService {
 
     }
 
-  GetList(){
+  GetList(paginationFilter:PaginationFilter){
 
-    return this.httpClient.get<Student[]>(this.apiUrl);
+    let params=new HttpParams();
     
+    params=params.append("pageNumber", paginationFilter.pageNumber);
+    params=params.append("pageSize", paginationFilter.pageSize);
+    params=params.append("sortOrder", paginationFilter.sortOrder);
+
+    return this.httpClient.get<Student[]>(this.apiUrl, {params:params});
+       
   }
 
   GetById(id:number){

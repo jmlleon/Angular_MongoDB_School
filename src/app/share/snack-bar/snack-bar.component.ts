@@ -1,19 +1,14 @@
 import { Component, Inject } from '@angular/core';
 
 import {MAT_SNACK_BAR_DATA, MatSnackBarRef} from '@angular/material/snack-bar';
+import { SnackBarBgMode, SnackBarData } from '../model/Student.model';
+import { MatButtonModule } from '@angular/material/button';
 
-
-export type SnackBarData={
-
-  title:string,
-  type:string
-  
-  }
 
 @Component({
   selector: 'snack-bar',
   standalone: true,
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './snack-bar.component.html',
   styleUrl: './snack-bar.component.css'
 })
@@ -28,35 +23,12 @@ export class SnackBarComponent {
 
   ngOnInit(): void {
 
-   if(this.data.type==="OK"){
-
-    this.cssColor="bg-green-500";
-
-   }else{
-
-    this.cssColor="bg-red-600";
-
-   }
-
+    this.cssColor=this.data.type==="OK" ? SnackBarBgMode.OK: SnackBarBgMode.ERROR;
 
   }
 
 
-  Close(){this.sbRef.dismiss();}
-
-
-  afterDismissed(){
-
-    this.sbRef.afterDismissed().subscribe(()=>{   
-    })
-  }
-
-  onAction(){
-
-    this.sbRef.onAction().subscribe(()=>{      
-    })
-
-  }
+  Close=()=>this.sbRef.dismiss(); 
 
 
 }

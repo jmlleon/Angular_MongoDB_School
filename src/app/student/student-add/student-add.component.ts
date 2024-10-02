@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -41,14 +41,13 @@ optType:string|null="";
 
 selectedStudent={} as Student;
 
+private localstorageSvc=inject(LocalStorageService);
+private studentSvc=inject(StudentService);
+private router=inject(Router);
 
 constructor(
-  fb:FormBuilder, 
-  private studentSvc:StudentService,
-  private router:Router,
-  private activeRoute:ActivatedRoute,
-  private localstorageSvc:LocalStorageService
-
+  fb:FormBuilder,    
+  private activeRoute:ActivatedRoute
 ){
 
   this.formGroup=fb.group({
@@ -107,8 +106,7 @@ GetStudentSelected(){
 
 
 ngOnDestroy(): void {
-  this.ngDestroy$.next(true);
-  //console.log("destroy");
+  this.ngDestroy$.next(true);  
 }
 
 Add(){
@@ -121,9 +119,9 @@ Add(){
   }
 
   this.studentSvc.Add(student).pipe(takeUntil(this.ngDestroy$)).subscribe({ 
-  error:(error)=>{    
-  },
-  complete:()=>{
+  
+    error:()=>{  this.loading=false; },
+    complete:()=>{
     this.loading=false;
     this.router.navigate(['/']);    
   }
